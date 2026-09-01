@@ -24,7 +24,8 @@ Da confermare (o cambiare) prima di scrivere codice:
 - `git init` nella root del progetto
 - Struttura iniziale:
   ```
-  /services/auth-service     ← primo microservizio
+  /backend                   ← root del modulo Go (go.mod qui)
+  /backend/services/auth-service     ← primo microservizio
   /frontend                  ← Angular, arriverà più avanti
   /deploy                    ← docker-compose, k8s, terraform, arriveranno più avanti
   /docs                      ← questo piano e la documentazione
@@ -32,13 +33,15 @@ Da confermare (o cambiare) prima di scrivere codice:
 - `README.md` iniziale con una riga di descrizione del progetto
 
 ### Step 3 — Primo microservizio Go minimo: `auth-service`
-- Modulo Go **unico per l'intero repo** (mono-modulo): `go mod init` nella **root** del progetto,
-  non dentro il singolo servizio. Così tutti i servizi condividono un solo `go.mod`/`go.sum` e possono
-  importarsi codice a vicenda (utile più avanti per i pacchetti `.proto` generati e le utility comuni)
-  senza `go.work`. Si potrà passare a un modulo per servizio in futuro se servirà davvero.
+- Modulo Go **unico per l'intero repo** (mono-modulo): `go mod init` dentro `backend/` (root del
+  modulo), non dentro il singolo servizio — fatto (`backend/go.mod`). Così tutti i servizi
+  condividono un solo `go.mod`/`go.sum` e possono importarsi codice a vicenda (utile più avanti
+  per i pacchetti `.proto` generati e le utility comuni) senza `go.work`. Si potrà passare a un
+  modulo per servizio in futuro se servirà davvero.
 - Server HTTP minimale (stdlib `net/http`, niente framework per ora) con un solo endpoint:
   `GET /health` → `200 OK`
-- Struttura base del progetto Go: `cmd/server/main.go` + `internal/`
+- Struttura base del progetto Go: `backend/services/auth-service/cmd/server/main.go` + `internal/`
+- Guida dettagliata passo-passo per questo step: [GUIDA_AUTH_SERVICE.md](GUIDA_AUTH_SERVICE.md)
 
 ### Step 4 — Verifica e primo test
 - Avvio locale (`go run`) e verifica manuale con `curl`/browser su `/health`
