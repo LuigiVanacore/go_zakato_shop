@@ -32,7 +32,10 @@ Da confermare (o cambiare) prima di scrivere codice:
 - `README.md` iniziale con una riga di descrizione del progetto
 
 ### Step 3 — Primo microservizio Go minimo: `auth-service`
-- `go mod init` dentro `services/auth-service`
+- Modulo Go **unico per l'intero repo** (mono-modulo): `go mod init` nella **root** del progetto,
+  non dentro il singolo servizio. Così tutti i servizi condividono un solo `go.mod`/`go.sum` e possono
+  importarsi codice a vicenda (utile più avanti per i pacchetti `.proto` generati e le utility comuni)
+  senza `go.work`. Si potrà passare a un modulo per servizio in futuro se servirà davvero.
 - Server HTTP minimale (stdlib `net/http`, niente framework per ora) con un solo endpoint:
   `GET /health` → `200 OK`
 - Struttura base del progetto Go: `cmd/server/main.go` + `internal/`
