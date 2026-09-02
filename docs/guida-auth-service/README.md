@@ -43,7 +43,7 @@ sostituiamo quello storage con Postgres senza toccare il resto — è il *reposi
 | 1 | [Server Go minimo con `/health`](01-server-minimo.md) | ✅ pronta |
 | 2 | [Test automatico per `/health`](02-test-automatico.md) | ✅ pronta |
 | 3 | [Containerizzazione con Docker](03-containerizzazione.md) | ✅ pronta |
-| 4 | Registrazione (`POST /register`) con storage in-memory: hashing password, repository pattern | da scrivere |
+| 4 | [Registrazione (`POST /register`) con storage in-memory: hashing password, repository pattern](04-registrazione.md) | ✅ pronta |
 | 5 | Login (`POST /login`) con storage in-memory: verifica password, generazione JWT | da scrivere |
 | 6 | Middleware di autenticazione: proteggere un endpoint col JWT, refresh token | da scrivere |
 | 7 | Postgres: sostituire lo storage in-memory con il database vero (Docker Compose, tabella `users`) | da scrivere |
