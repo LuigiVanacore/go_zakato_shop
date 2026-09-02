@@ -41,7 +41,8 @@ Da confermare (o cambiare) prima di scrivere codice:
 - Server HTTP minimale (stdlib `net/http`, niente framework per ora) con un solo endpoint:
   `GET /health` → `200 OK`
 - Struttura base del progetto Go: `backend/services/auth-service/cmd/server/main.go` + `internal/`
-- Guida dettagliata passo-passo per questo step: [GUIDA_AUTH_SERVICE.md](GUIDA_AUTH_SERVICE.md)
+- Guida dettagliata passo-passo per questo step (serie di parti consequenziali):
+  [guida-auth-service/](guida-auth-service/README.md)
 
 ### Step 4 — Verifica e primo test
 - Avvio locale (`go run`) e verifica manuale con `curl`/browser su `/health`

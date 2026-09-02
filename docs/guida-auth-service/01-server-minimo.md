@@ -1,51 +1,6 @@
-# Guida passo-passo: costruire `auth-service`
+# Parte 1 — Server Go minimo con `/health`
 
-Questa guida è pensata per chi non ha (ancora) esperienza pratica con Go: ogni passo spiega
-non solo *cosa* scrivere ma anche *perché*. Si procede per **iterazioni piccolissime**: ogni
-iterazione produce qualcosa che **funziona davvero e si può verificare**, prima di passare
-alla successiva. Non si salta mai avanti.
-
-> Riferimento architettura generale: [PIANO_GENERALE.md](PIANO_GENERALE.md).
-> Questa guida è il dettaglio pratico di "costruire auth-service", una parte della Fase 1/2
-> di [PIANO_DETTAGLIATO.md](PIANO_DETTAGLIATO.md).
-
-## Dove viviamo nel repository
-
-Il modulo Go del progetto è già stato inizializzato in `backend/go.mod` (un unico modulo per
-tutti i microservizi, come deciso in precedenza). Tutto il codice Go che scriveremo starà
-sotto `backend/`, con questa struttura via via che cresce:
-
-```
-backend/
-  go.mod
-  services/
-    auth-service/
-      cmd/server/main.go   ← punto di ingresso del programma
-      internal/            ← codice privato del servizio (arriverà più avanti)
-```
-
-**Importante**: tutti i comandi `go ...` di questa guida vanno lanciati da dentro la cartella
-`backend/` (è lì che si trova `go.mod`), non dalla root del repository.
-
----
-
-## Roadmap delle iterazioni
-
-Solo la **Iterazione 1** è dettagliata qui sotto. Le altre sono solo titoli: le dettaglieremo
-una alla volta, quando arriviamo a completare quella precedente.
-
-1. **Server Go minimo con `/health`** ← si parte da qui, dettagliata sotto
-2. Test automatico per `/health`
-3. Containerizzazione con Docker
-4. Postgres via Docker Compose + prima tabella `users`
-5. Endpoint di registrazione (`POST /register`): hashing password, salvataggio utente
-6. Endpoint di login (`POST /login`): verifica password, generazione JWT
-7. Middleware di autenticazione: proteggere un endpoint col JWT, refresh token
-8. Conversione da REST a gRPC (quando arriveremo all'API Gateway)
-
----
-
-## Iterazione 1 — Server Go minimo con `/health`
+> [← Indice della guida](README.md)
 
 ### Obiettivo
 Un programma Go che, avviato, resta in ascolto su una porta e risponde `200 OK` quando lo
@@ -154,11 +109,13 @@ Per fermare il server: torna al primo terminale e premi `Ctrl+C`.
   nella cartella giusta, o non hai lanciato `go run` da dentro `backend/`
 - **`go: cannot find main module`**: sei fuori da `backend/` (dove sta `go.mod`) — fai `cd backend`
 
-### Checklist di fine iterazione
+### Checklist di fine parte
 - [ ] `go run ./services/auth-service/cmd/server` parte senza errori
 - [ ] `curl.exe http://localhost:8080/health` (o il browser) risponde `ok` con status 200
 - [ ] Hai capito cosa fa ciascuna riga di `main.go` (se qualcosa non è chiaro, chiedimelo
       prima di andare avanti)
 
-Quando questa checklist è verde, siamo pronti per l'**Iterazione 2** (test automatico) — la
-dettaglio qui in questo file quando mi dici che sei arrivato fin qui.
+Quando questa checklist è verde, siamo pronti per la **Parte 2** (test automatico) — la scrivo
+in questa cartella quando mi dici che sei arrivato fin qui.
+
+> [← Indice della guida](README.md)
