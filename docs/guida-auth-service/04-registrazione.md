@@ -47,16 +47,12 @@ go get github.com/google/uuid
 `bcrypt` per l'hashing della password, `uuid` per generare l'ID univoco di ogni utente (lo
 stesso tipo di ID, `UUID`, che useremo come chiave primaria quando arriveremo a Postgres).
 
-### Passo 2 — Modello utente e repository: `internal/auth/user.go`
+### Passo 2 — Il modello dati: `internal/auth/user.go`
 Crea `backend/services/auth-service/internal/auth/user.go`:
 ```go
 package auth
 
-import (
-	"errors"
-	"sync"
-	"time"
-)
+import "time"
 
 type User struct {
 	ID           string
@@ -64,6 +60,20 @@ type User struct {
 	PasswordHash string
 	CreatedAt    time.Time
 }
+```
+Questo file contiene **solo** la forma dei dati, niente comportamento: nessuna dipendenza da
+`sync`, nessuna logica. Tenerlo separato dal repository rende chiaro, aprendo il file, "cos'è
+un utente" senza doversi preoccupare di *come* viene salvato.
+
+### Passo 3 — Il repository: `internal/auth/repository.go`
+Crea `backend/services/auth-service/internal/auth/repository.go`:
+```go
+package auth
+
+import (
+	"errors"
+	"sync"
+)
 
 var ErrUserAlreadyExists = errors.New("utente già esistente")
 
@@ -102,9 +112,12 @@ func (r *InMemoryUserRepository) GetByEmail(email string) (User, bool) {
 ```
 Nota: `InMemoryUserRepository` implementa l'interfaccia `UserRepository` **implicitamente** —
 in Go non c'è bisogno di scrivere `implements UserRepository` da nessuna parte: se i metodi
-combaciano nella firma, l'interfaccia è soddisfatta automaticamente.
+combaciano nella firma, l'interfaccia è soddisfatta automaticamente. Ed è per questo che la
+separazione tra i due file ha senso: `user.go` non sa nemmeno che `UserRepository` esiste, e
+alla Parte 7 aggiungeremo un `PostgresUserRepository` in un terzo file, senza toccare né
+`user.go` né questo file.
 
-### Passo 3 — L'handler HTTP: `internal/auth/register.go`
+### Passo 4 — L'handler HTTP: `internal/auth/register.go`
 Crea `backend/services/auth-service/internal/auth/register.go`:
 ```go
 package auth
@@ -190,7 +203,7 @@ Punti chiave:
 - `errors.Is(err, ErrUserAlreadyExists)`: confrontiamo l'errore con una variabile sentinella
   invece che con il testo del messaggio — pratica standard in Go, più robusta
 
-### Passo 4 — Collega tutto in `main.go`
+### Passo 5 — Collega tutto in `main.go`
 Aggiorna `backend/services/auth-service/cmd/server/main.go`:
 ```go
 package main
@@ -226,7 +239,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 `main()` ora fa da "collante": crea il repository, crea l'handler passandogli il repository,
 registra la route. La logica vera e propria non sta qui — sta in `internal/auth`.
 
-### Passo 5 — Aggiorna il `Dockerfile`
+### Passo 6 — Aggiorna il `Dockerfile`
 Fino ad ora il modulo non aveva dipendenze esterne, quindi `go.sum` non esisteva. Da questo
 passo esiste (grazie a `bcrypt` e `uuid`), quindi in
 `backend/services/auth-service/Dockerfile` cambia:
@@ -238,7 +251,7 @@ in:
 COPY go.mod go.sum ./
 ```
 
-### Passo 6 — Prova a mano
+### Passo 7 — Prova a mano
 Avvia il server (`go run ./services/auth-service/cmd/server` da `backend/`, come nella Parte 1)
 e in un altro terminale:
 ```powershell
@@ -256,7 +269,7 @@ Ti aspetti status `201` e un corpo tipo `{"id":"...","email":"mario@esempio.it"}
 Ora prova a rimandare **la stessa** richiesta: ti aspetti `409` ("utente già registrato").
 Prova anche con `password` corta (es. `"123"`): ti aspetti `400`.
 
-### Passo 7 — Test automatico
+### Passo 8 — Test automatico
 Crea `backend/services/auth-service/internal/auth/register_test.go`:
 ```go
 package auth
