@@ -33,15 +33,20 @@ Ogni parte è un file separato in questa cartella, numerato in ordine. Solo le p
 completate hanno un file scritto — le altre sono titoli: le dettaglieremo una alla volta,
 quando arriviamo a completare la precedente.
 
+**Nota sull'ordine**: inizialmente Postgres era la Parte 4, subito dopo Docker. Su richiesta
+è stato spostato dopo la logica di autenticazione: prima costruiamo registrazione/login/JWT
+con uno storage **in-memory** (una mappa Go, dietro un'interfaccia repository), poi
+sostituiamo quello storage con Postgres senza toccare il resto — è il *repository pattern*.
+
 | # | Parte | Stato |
 |---|-------|-------|
 | 1 | [Server Go minimo con `/health`](01-server-minimo.md) | ✅ pronta |
 | 2 | [Test automatico per `/health`](02-test-automatico.md) | ✅ pronta |
 | 3 | [Containerizzazione con Docker](03-containerizzazione.md) | ✅ pronta |
-| 4 | [Postgres via Docker Compose + prima tabella `users`](04-postgres.md) | ✅ pronta |
-| 5 | Endpoint di registrazione (`POST /register`): hashing password, salvataggio utente | da scrivere |
-| 6 | Endpoint di login (`POST /login`): verifica password, generazione JWT | da scrivere |
-| 7 | Middleware di autenticazione: proteggere un endpoint col JWT, refresh token | da scrivere |
+| 4 | Registrazione (`POST /register`) con storage in-memory: hashing password, repository pattern | da scrivere |
+| 5 | Login (`POST /login`) con storage in-memory: verifica password, generazione JWT | da scrivere |
+| 6 | Middleware di autenticazione: proteggere un endpoint col JWT, refresh token | da scrivere |
+| 7 | Postgres: sostituire lo storage in-memory con il database vero (Docker Compose, tabella `users`) | da scrivere |
 | 8 | Conversione da REST a gRPC (quando arriveremo all'API Gateway) | da scrivere |
 
 Quando completi la checklist di fine parte in un file, dimmelo e scrivo la parte successiva.
