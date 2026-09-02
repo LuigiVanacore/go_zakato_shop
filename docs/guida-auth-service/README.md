@@ -37,7 +37,7 @@ quando arriviamo a completare la precedente.
 |---|-------|-------|
 | 1 | [Server Go minimo con `/health`](01-server-minimo.md) | ✅ pronta |
 | 2 | [Test automatico per `/health`](02-test-automatico.md) | ✅ pronta |
-| 3 | Containerizzazione con Docker | da scrivere |
+| 3 | [Containerizzazione con Docker](03-containerizzazione.md) | ✅ pronta |
 | 4 | Postgres via Docker Compose + prima tabella `users` | da scrivere |
 | 5 | Endpoint di registrazione (`POST /register`): hashing password, salvataggio utente | da scrivere |
 | 6 | Endpoint di login (`POST /login`): verifica password, generazione JWT | da scrivere |
