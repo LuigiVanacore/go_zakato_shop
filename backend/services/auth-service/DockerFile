@@ -1,0 +1,21 @@
+# Stage 1: build — usa l'immagine ufficiale Go, con compilatore e toolchain
+FROM golang:1.26 AS builder
+WORKDIR /src
+
+# Copiamo prima SOLO i file delle dipendenze: se il codice sorgente cambia ma go.mod no,
+# Docker riusa la cache di questo layer invece di riscaricare le dipendenze ogni volta
+COPY go.mod ./
+RUN go mod download
+
+# Ora copiamo tutto il resto del modulo (tutti i servizi, dato che il modulo Go è unico)
+COPY . .
+
+# CGO_ENABLED=0 produce un binario statico, senza dipendenze dalla libc di sistema —
+# necessario per poterlo far girare sull'immagine finale "distroless" che non ha nulla
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/auth-service ./services/auth-service/cmd/server
+
+# Stage 2: immagine finale — minimale, niente compilatore, niente shell
+FROM gcr.io/distroless/static-debian12
+COPY --from=builder /out/auth-service /auth-service
+EXPOSE 8080
+ENTRYPOINT ["/auth-service"]
